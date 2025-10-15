@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SwipeDate - Meet New People</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 400px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .card-container {
+            flex: 1;
+            width: 100%;
+            max-width: 350px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .profile-card {
+            width: 100%;
+            max-width: 350px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            position: absolute;
+            cursor: grab;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .profile-card:active {
+            cursor: grabbing;
+        }
+
+        .profile-card.swiping {
+            transition: none;
+        }
+
+        .profile-image {
+            width: 100%;
+            height: 400px;
+            border-radius: 20px 20px 0 0;
+            object-fit: cover;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .profile-info {
+            padding: 25px;
+            text-align: center;
+        }
+
+        .profile-name {
+            font-size: 28px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .profile-age {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .profile-bio {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .profile-tags {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            background: #f0f0f0;
+            color: #666;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        .action-buttons {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            z-index: 101;
+        }
+
+        .action-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .action-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .action-btn:active {
+            transform: scale(0.95);
+        }
+
+        .dislike-btn {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .super-like-btn {
+            background: #4ecdc4;
+            color: white;
+        }
+
+        .like-btn {
+            background: #4ecdc4;
+            color: white;
+        }
+
+        .swipe-indicator {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 60px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .swipe-indicator.left {
+            left: 30px;
+            color: #ff6b6b;
+        }
+
+        .swipe-indicator.right {
+            right: 30px;
+            color: #4ecdc4;
+        }
+
+        .swipe-indicator.show {
+            opacity: 1;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: white;
+            width: 100%;
+            max-width: 350px;
+        }
+
+        .empty-state h2 {
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+
+        .empty-state p {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+
+        .restart-btn {
+            margin-top: 30px;
+            padding: 15px 30px;
+            background: white;
+            color: #667eea;
+            border: none;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .restart-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .matches-count {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            backdrop-filter: blur(10px);
+        }
+
+        @media (max-width: 480px) {
+            .profile-card {
+                max-width: 320px;
+            }
+            
+            .profile-image {
+                height: 350px;
+            }
+            
+            .profile-name {
+                font-size: 24px;
+            }
+            
+            .action-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+            
+            .app-container {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="matches-count" id="matches-count" style="display: none;">
+            Matches: <span id="matches-number">0</span>
+        </div>
+
+        <div class="card-container" id="card-container">
+            <!-- Profile cards will be inserted here -->
+        </div>
+
+        <div class="action-buttons">
+            <a href="https://www.effectivegatecpm.com/z2jn2ydz?key=696d7ad4454b7be1c8222a47f044f154"><button class="action-btn dislike-btn" id="dislike-btn">👎</button></a>
+            <a href="https://www.effectivegatecpm.com/ejv0m8cv?key=7775dda4ea4b32769399558afb9597af"><button class="action-btn super-like-btn" id="super-like-btn">⭐</button></a>
+            <a href="https://www.effectivegatecpm.com/qub3zbrq3i?key=d852fef756861bd89c4f775136e1fdda"><button class="action-btn like-btn" id="like-btn">❤️</button></a>
+        </div>
+
+        <div class="swipe-indicator left" id="left-indicator">👎</div>
+        <div class="swipe-indicator right" id="right-indicator">❤️</div>
+    </div>
+
+    <script>
+        // Generate 100 random profiles
+        const firstNames = ['Emma', 'Olivia', 'Sophia', 'Isabella', 'Ava', 'Mia', 'Charlotte', 'Amelia', 'Harper', 'Evelyn', 'Abigail', 'Emily', 'Elizabeth', 'Avery', 'Sofia', 'Ella', 'Madison', 'Scarlett', 'Victoria', 'Aria', 'Grace', 'Chloe', 'Camila', 'Penelope', 'Riley', 'Layla', 'Lily', 'Zoe', 'Nora', 'Hannah', 'Mila', 'Aubrey', 'Ellie', 'Stella', 'Natalie', 'Leah', 'Hazel', 'Violet', 'Aurora', 'Savannah', 'Audrey', 'Brooklyn', 'Bella', 'Claire', 'Skylar', 'Lucy', 'Paisley', 'Everly', 'Anna', 'Caroline', 'Nova', 'Genesis', 'Emilia', 'Kennedy', 'Maya', 'Willow', 'Kinsley', 'Naomi', 'Sarah', 'Allison', 'Gabriella', 'Madelyn', 'Cora', 'Eva', 'Serenity', 'Autumn', 'Aaliyah', 'Quinn', 'Nevaeh', 'Adeline', 'Sadie', 'Luna', 'Jade', 'Lydia', 'Madeline', 'Brianna', 'Barbara', 'Mackenzie', 'Iris', 'Alexis', 'Ariana', 'Vivian', 'Kaylee', 'Sophie', 'Delilah', 'Josephine', 'Nina', 'Melody', 'Hadley', 'Alexandra', 'Valentina', 'Liliana', 'Morgan', 'Legacy', 'Paige', 'Rylee', 'Maria', 'Eleanor', 'Mya', 'Elizabeth', 'Aubree', 'Jasmine', 'Gianna', 'Melanie', 'Addison', 'Lillian', 'Ivy', 'Ximena', 'Clara', 'Natalia', 'Mary', 'Kate', 'Fatima', 'Amaya', 'Reagan', 'Brielle', 'Julia', 'Daisy', 'Lauren', 'Valeria', 'Jocelyn', 'Fiona', 'Rosalie', 'Eliza'];
+        
+        const lastNames = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Martinez', 'Hernandez', 'Lopez', 'Gonzalez', 'Wilson', 'Anderson', 'Thomas', 'Taylor', 'Moore', 'Jackson', 'Martin', 'Lee', 'Perez', 'Thompson', 'White', 'Harris', 'Sanchez', 'Clark', 'Ramirez', 'Lewis', 'Robinson', 'Walker', 'Young', 'Allen', 'King', 'Wright', 'Scott', 'Torres', 'Nguyen', 'Hill', 'Flores', 'Green', 'Adams', 'Nelson', 'Baker', 'Hall', 'Rivera', 'Campbell', 'Mitchell', 'Carter', 'Roberts', 'Gomez', 'Phillips', 'Evans', 'Turner', 'Diaz', 'Parker', 'Cruz', 'Edwards', 'Collins', 'Stewart', 'Morris', 'Murphy', 'Cook', 'Rogers', 'Morgan', 'Peterson', 'Cooper', 'Reed', 'Bailey', 'Bell', 'Gomez', 'Kelly', 'Howard', 'Ward', 'Cox', 'Diaz', 'Richardson', 'Wood', 'Watson', 'Brooks', 'Bennett', 'Gray', 'James', 'Reyes', 'Cruz', 'Hughes', 'Price', 'Myers', 'Long', 'Foster', 'Sanders', 'Ross', 'Morales', 'Powell', 'Sullivan', 'Russell', 'Ortiz', 'Jenkins', 'Gutierrez', 'Perry', 'Butler', 'Barnes', 'Fisher', 'Henderson', 'Coleman', 'Simmons', 'Patterson', 'Alexander', 'Sanders', 'Stephens', 'Wallace', 'Griffin', 'West', 'Hayes', 'Bryant', 'Henry', 'Morrison', 'Cook', 'Rose', 'Patel', 'Allen', 'Cook', 'Morgan', 'Bell', 'Perry', 'Murphy', 'Bailey', 'Rivera', 'Cooper', 'Richardson', 'Cox', 'Howard', 'Ward', 'Torres', 'Peterson', 'Gray', 'Ramirez', 'James', 'Watson', 'Brooks', 'Kelly', 'Bennett', 'Wood', 'Harris', 'Sanchez', 'Price', 'Hughes'];
+
+        const interests = ['Travel', 'Music', 'Art', 'Sports', 'Cooking', 'Reading', 'Movies', 'Photography', 'Dancing', 'Yoga', 'Hiking', 'Gaming', 'Fitness', 'Writing', 'Painting', 'Swimming', 'Camping', 'Shopping', 'Parties', 'Coffee', 'Wine', 'Animals', 'Nature', 'Fashion', 'Technology', 'Science', 'History', 'Language', 'Photography', 'Theater', 'Comedy', 'Concerts', 'Museums', 'Beaches', 'Mountains', 'Road trips', 'Food', 'Wine tasting', 'Board games', 'Puzzles'];
+
+        function generateProfiles() {
+            const profiles = [];
+            const usedNames = new Set();
+            
+            // Create image URLs - you can change this to use your own images
+            const imageUrls = [
+
+                    'img/1.webp', 'img/2.webp', 'img/3.webp', 'img/4.webp', 'img/5.webp', 'img/6.webp', 'img/7.webp', 'img/8.webp', 'img/9.webp', 'img/10.webp',
+                    'img/11.webp', 'img/12.webp', 'img/13.webp', 'img/14.webp', 'img/15.webp', 'img/16.webp', 'img/17.webp', 'img/18.webp', 'img/19.webp', 'img/20.webp',
+                    'img/21.webp', 'img/22.webp', 'img/23.webp', 'img/24.webp', 'img/25.webp', 'img/26.webp', 'img/27.webp', 'img/28.webp', 'img/29.webp', 'img/30.webp',
+                    'img/31.webp', 'img/32.webp', 'img/33.webp', 'img/34.webp', 'img/35.webp', 'img/36.webp', 'img/37.webp', 'img/38.webp', 'img/39.webp', 'img/40.webp',
+                    'img/41.webp', 'img/42.webp', 'img/43.webp', 'img/44.webp', 'img/45.webp', 'img/46.webp', 'img/47.webp', 'img/48.webp', 'img/49.webp', 'img/50.webp',
+                    'img/51.webp', 'img/52.webp', 'img/53.webp', 'img/54.webp', 'img/55.webp', 'img/56.webp', 'img/57.webp', 'img/58.webp', 'img/59.webp', 'img/60.webp',
+                    'img/61.webp', 'img/62.webp', 'img/63.webp', 'img/64.webp', 'img/65.webp', 'img/66.webp', 'img/67.webp', 'img/68.webp', 'img/69.webp', 'img/70.webp',
+                    'img/71.webp', 'img/72.webp', 'img/73.webp', 'img/74.webp', 'img/75.webp', 'img/76.webp', 'img/77.webp', 'img/78.webp', 'img/79.webp', 'img/80.webp',
+                    'img/81.webp', 'img/82.webp', 'img/83.webp', 'img/84.webp', 'img/85.webp', 'img/86.webp', 'img/87.webp', 'img/88.webp', 'img/89.webp', 'img/90.webp',
+                    'img/91.jpg', 'img/92.jpg', 'img/93.jpg', 'img/94.jpg', 'img/95.jpg', 'img/96.jpg', 'img/97.jpg', 'img/98.jpg', 'img/99.jpg', 'img/100.jpg'
+
+            ];
+            
+            for (let i = 0; i < 100; i++) {
+                let name;
+                do {
+                    const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+                    const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+                    name = `${firstName} ${lastName}`;
+                } while (usedNames.has(name));
+                
+                usedNames.add(name);
+                
+                const age = Math.floor(Math.random() * 11) + 15; // 15-25
+                const bio = `Love exploring new places and trying new things. Always up for an adventure!`;
+                const tags = [];
+                const numTags = Math.floor(Math.random() * 4) + 2; // 2-5 tags
+                
+                while (tags.length < numTags) {
+                    const tag = interests[Math.floor(Math.random() * interests.length)];
+                    if (!tags.includes(tag)) {
+                        tags.push(tag);
+                    }
+                }
+                
+                profiles.push({
+                    id: i,
+                    name,
+                    age,
+                    bio,
+                    tags,
+                    image: imageUrls[i] // Use specific image URLs
+                });
+            }
+            
+            return profiles;
+        }
+
+        let profiles = generateProfiles();
+        let currentIndex = 0;
+        let likedProfiles = [];
+        let dislikedProfiles = [];
+        let currentCard = null;
+        let isDragging = false;
+        let startX = 0;
+        let currentX = 0;
+        let rotation = 0;
+
+        const cardContainer = document.getElementById('card-container');
+        const dislikeBtn = document.getElementById('dislike-btn');
+        const likeBtn = document.getElementById('like-btn');
+        const superLikeBtn = document.getElementById('super-like-btn');
+        const leftIndicator = document.getElementById('left-indicator');
+        const rightIndicator = document.getElementById('right-indicator');
+        const matchesCount = document.getElementById('matches-count');
+        const matchesNumber = document.getElementById('matches-number');
+
+        function createProfileCard(profile) {
+            const card = document.createElement('div');
+            card.className = 'profile-card';
+            card.innerHTML = `
+                <img src="${profile.image}" alt="${profile.name}" class="profile-image">
+                <div class="profile-info">
+                    <h2 class="profile-name">${profile.name}</h2>
+                    <p class="profile-age">${profile.age} years old</p>
+                    <p class="profile-bio">${profile.bio}</p>
+                    <div class="profile-tags">
+                        ${profile.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                    </div>
+                </div>
+            `;
+            return card;
+        }
+
+        function showNextProfile() {
+            if (currentIndex >= profiles.length) {
+                showEmptyState();
+                return;
+            }
+
+            if (currentCard) {
+                currentCard.remove();
+            }
+
+            currentCard = createProfileCard(profiles[currentIndex]);
+            cardContainer.appendChild(currentCard);
+            
+            // Add drag functionality
+            currentCard.addEventListener('mousedown', startDrag);
+            currentCard.addEventListener('touchstart', startDrag);
+            document.addEventListener('mousemove', drag);
+            document.addEventListener('touchmove', drag);
+            document.addEventListener('mouseup', endDrag);
+            document.addEventListener('touchend', endDrag);
+        }
+
+        function startDrag(e) {
+            isDragging = true;
+            startX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+            currentCard.classList.add('swiping');
+            e.preventDefault();
+        }
+
+        function drag(e) {
+            if (!isDragging) return;
+            
+            currentX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+            const diffX = currentX - startX;
+            const threshold = 150;
+            
+            rotation = (diffX / threshold) * 30;
+            currentCard.style.transform = `translateX(${diffX}px) rotate(${rotation}deg)`;
+            
+            // Show swipe indicators
+            if (diffX > threshold) {
+                leftIndicator.classList.remove('show');
+                rightIndicator.classList.add('show');
+            } else if (diffX < -threshold) {
+                rightIndicator.classList.remove('show');
+                leftIndicator.classList.add('show');
+            } else {
+                leftIndicator.classList.remove('show');
+                rightIndicator.classList.remove('show');
+            }
+        }
+
+        function endDrag() {
+            if (!isDragging) return;
+            
+            isDragging = false;
+            currentCard.classList.remove('swiping');
+            
+            const diffX = currentX - startX;
+            const threshold = 150;
+            
+            if (Math.abs(diffX) > threshold) {
+                if (diffX > threshold) {
+                    // Swipe right (like)
+                    swipe('right');
+                } else {
+                    // Swipe left (dislike)
+                    swipe('left');
+                }
+            } else {
+                // Return to center
+                currentCard.style.transform = '';
+                leftIndicator.classList.remove('show');
+                rightIndicator.classList.remove('show');
+            }
+        }
+
+        function swipe(direction) {
+            const profile = profiles[currentIndex];
+            
+            if (direction === 'right') {
+                likedProfiles.push(profile);
+                updateMatchesCount();
+            } else {
+                dislikedProfiles.push(profile);
+            }
+            
+            // Animate card out
+            const endX = direction === 'right' ? window.innerWidth : -window.innerWidth;
+            currentCard.style.transition = 'transform 0.5s ease';
+            currentCard.style.transform = `translateX(${endX}px) rotate(${direction === 'right' ? 30 : -30}deg)`;
+            
+            setTimeout(() => {
+                currentIndex++;
+                showNextProfile();
+            }, 500);
+        }
+
+        function updateMatchesCount() {
+            matchesNumber.textContent = likedProfiles.length;
+            matchesCount.style.display = 'block';
+        }
+
+        function showEmptyState() {
+            cardContainer.innerHTML = `
+                <div class="empty-state">
+                    <h2>You've seen everyone!</h2>
+                    <p>You've swiped through all 100 profiles.</p>
+                    <button class="restart-btn" onclick="restart()">Start Over</button>
+                </div>
+            `;
+        }
+
+        function restart() {
+            profiles = generateProfiles();
+            currentIndex = 0;
+            likedProfiles = [];
+            dislikedProfiles = [];
+            matchesCount.style.display = 'none';
+            showNextProfile();
+        }
+
+        // Button event listeners
+        dislikeBtn.addEventListener('click', () => swipe('left'));
+        likeBtn.addEventListener('click', () => swipe('right'));
+        superLikeBtn.addEventListener('click', () => {
+            // Super like animation
+            currentCard.style.transition = 'transform 0.5s ease';
+            currentCard.style.transform = 'scale(1.1) rotate(360deg)';
+            
+            setTimeout(() => {
+                currentCard.style.transform = 'scale(1) rotate(0deg)';
+                setTimeout(() => {
+                    swipe('right');
+                }, 300);
+            }, 500);
+        });
+
+        // Initialize
+        showNextProfile();
+    </script>
+</body>
+</html>
