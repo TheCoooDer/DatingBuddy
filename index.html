@@ -30,12 +30,9 @@
         }
 
         .card-container {
-            flex: 1;
             width: 100%;
+            height: calc(100vh - 80px); /* Full height minus action buttons */
             position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             overflow: hidden;
         }
 
@@ -46,11 +43,14 @@
             border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
             cursor: grab;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             user-select: none;
             -webkit-user-select: none;
-            height: calc(100% - 80px);
+            height: 100%;
             display: flex;
             flex-direction: column;
         }
@@ -65,7 +65,7 @@
 
         .profile-image-container {
             width: 100%;
-            height: 75%;
+            height: 85%;
             border-radius: 20px 20px 0 0;
             overflow: hidden;
             position: relative;
@@ -79,7 +79,7 @@
         }
 
         .profile-info {
-            padding: 20px;
+            padding: 15px;
             text-align: center;
             flex: 1;
             display: flex;
@@ -97,13 +97,6 @@
         .profile-age {
             font-size: 22px;
             color: #666;
-            margin-bottom: 15px;
-        }
-
-        .profile-bio {
-            font-size: 18px;
-            color: #555;
-            line-height: 1.5;
         }
 
         .action-buttons {
@@ -235,11 +228,14 @@
         @media (max-width: 480px) {
             .profile-card {
                 max-width: 100%;
-                height: calc(100% - 70px);
             }
             
             .profile-image-container {
-                height: 70%;
+                height: 80%;
+            }
+            
+            .profile-info {
+                padding: 10px;
             }
             
             .profile-name {
@@ -248,10 +244,6 @@
             
             .profile-age {
                 font-size: 20px;
-            }
-            
-            .profile-bio {
-                font-size: 16px;
             }
             
             .action-btn {
@@ -329,13 +321,11 @@
                 usedNames.add(name);
                 
                 const age = Math.floor(Math.random() * 11) + 15; // 15-25
-                const bio = `Love exploring new places and trying new things. Always up for an adventure!`;
                 
                 profiles.push({
                     id: i,
                     name,
                     age,
-                    bio,
                     image: imageUrls[i] // Use specific image URLs
                 });
             }
@@ -372,7 +362,6 @@
                 <div class="profile-info">
                     <h2 class="profile-name">${profile.name}</h2>
                     <p class="profile-age">${profile.age} years old</p>
-                    <p class="profile-bio">${profile.bio}</p>
                 </div>
             `;
             return card;
