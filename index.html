@@ -17,8 +17,6 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
             overflow-x: hidden;
             position: relative;
         }
@@ -26,11 +24,10 @@
         .app-container {
             width: 100%;
             max-width: 400px;
-            height: 100vh;
+            height: calc(100vh - 70px); /* Reduced height for Telegram mini app */
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            margin: 0 auto;
             position: relative;
         }
 
@@ -42,6 +39,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            margin: 0 auto;
         }
 
         .profile-card {
@@ -55,6 +53,9 @@
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             user-select: none;
             -webkit-user-select: none;
+            height: calc(100% - 30px);
+            display: flex;
+            flex-direction: column;
         }
 
         .profile-card:active {
@@ -65,21 +66,32 @@
             transition: none;
         }
 
+        .profile-image-container {
+            width: 100%;
+            height: 65%; /* Increased image height */
+            border-radius: 20px 20px 0 0;
+            overflow: hidden;
+            position: relative;
+        }
+
         .profile-image {
             width: 100%;
-            height: 400px;
-            border-radius: 20px 20px 0 0;
+            height: 100%;
             object-fit: cover;
             background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
         }
 
         .profile-info {
-            padding: 25px;
+            padding: 20px;
             text-align: center;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
         .profile-name {
-            font-size: 28px;
+            font-size: 26px;
             font-weight: 700;
             color: #333;
             margin-bottom: 5px;
@@ -95,44 +107,29 @@
             font-size: 16px;
             color: #555;
             line-height: 1.5;
-            margin-bottom: 20px;
-        }
-
-        .profile-tags {
-            display: flex;
-            gap: 8px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .tag {
-            background: #f0f0f0;
-            color: #666;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 14px;
         }
 
         .action-buttons {
             position: absolute;
-            bottom: 30px;
+            bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
             gap: 20px;
             z-index: 101;
+            padding: 0 10px;
         }
 
         .action-btn {
-            width: 60px;
-            height: 60px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             border: none;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
+            font-size: 22px;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
@@ -190,21 +187,26 @@
             color: white;
             width: 100%;
             max-width: 350px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
         .empty-state h2 {
-            font-size: 32px;
-            margin-bottom: 20px;
+            font-size: 28px;
+            margin-bottom: 15px;
         }
 
         .empty-state p {
-            font-size: 18px;
+            font-size: 16px;
             opacity: 0.9;
+            margin-bottom: 20px;
         }
 
         .restart-btn {
-            margin-top: 30px;
-            padding: 15px 30px;
+            margin-top: 20px;
+            padding: 12px 24px;
             background: white;
             color: #667eea;
             border: none;
@@ -213,6 +215,7 @@
             font-weight: 600;
             cursor: pointer;
             transition: transform 0.2s ease;
+            align-self: center;
         }
 
         .restart-btn:hover {
@@ -221,11 +224,11 @@
 
         .matches-count {
             position: absolute;
-            top: 20px;
-            right: 20px;
+            top: 15px;
+            right: 15px;
             background: rgba(255, 255, 255, 0.2);
             color: white;
-            padding: 8px 16px;
+            padding: 6px 12px;
             border-radius: 20px;
             font-size: 14px;
             backdrop-filter: blur(10px);
@@ -236,22 +239,26 @@
                 max-width: 320px;
             }
             
-            .profile-image {
-                height: 350px;
+            .profile-image-container {
+                height: 60%;
             }
             
             .profile-name {
-                font-size: 24px;
+                font-size: 22px;
             }
             
             .action-btn {
-                width: 50px;
-                height: 50px;
-                font-size: 20px;
+                width: 45px;
+                height: 45px;
+                font-size: 18px;
             }
             
             .app-container {
-                padding: 10px;
+                padding: 5px;
+            }
+            
+            .profile-info {
+                padding: 15px;
             }
         }
     </style>
@@ -282,26 +289,22 @@
         
         const lastNames = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Martinez', 'Hernandez', 'Lopez', 'Gonzalez', 'Wilson', 'Anderson', 'Thomas', 'Taylor', 'Moore', 'Jackson', 'Martin', 'Lee', 'Perez', 'Thompson', 'White', 'Harris', 'Sanchez', 'Clark', 'Ramirez', 'Lewis', 'Robinson', 'Walker', 'Young', 'Allen', 'King', 'Wright', 'Scott', 'Torres', 'Nguyen', 'Hill', 'Flores', 'Green', 'Adams', 'Nelson', 'Baker', 'Hall', 'Rivera', 'Campbell', 'Mitchell', 'Carter', 'Roberts', 'Gomez', 'Phillips', 'Evans', 'Turner', 'Diaz', 'Parker', 'Cruz', 'Edwards', 'Collins', 'Stewart', 'Morris', 'Murphy', 'Cook', 'Rogers', 'Morgan', 'Peterson', 'Cooper', 'Reed', 'Bailey', 'Bell', 'Gomez', 'Kelly', 'Howard', 'Ward', 'Cox', 'Diaz', 'Richardson', 'Wood', 'Watson', 'Brooks', 'Bennett', 'Gray', 'James', 'Reyes', 'Cruz', 'Hughes', 'Price', 'Myers', 'Long', 'Foster', 'Sanders', 'Ross', 'Morales', 'Powell', 'Sullivan', 'Russell', 'Ortiz', 'Jenkins', 'Gutierrez', 'Perry', 'Butler', 'Barnes', 'Fisher', 'Henderson', 'Coleman', 'Simmons', 'Patterson', 'Alexander', 'Sanders', 'Stephens', 'Wallace', 'Griffin', 'West', 'Hayes', 'Bryant', 'Henry', 'Morrison', 'Cook', 'Rose', 'Patel', 'Allen', 'Cook', 'Morgan', 'Bell', 'Perry', 'Murphy', 'Bailey', 'Rivera', 'Cooper', 'Richardson', 'Cox', 'Howard', 'Ward', 'Torres', 'Peterson', 'Gray', 'Ramirez', 'James', 'Watson', 'Brooks', 'Kelly', 'Bennett', 'Wood', 'Harris', 'Sanchez', 'Price', 'Hughes'];
 
-        const interests = ['Travel', 'Music', 'Art', 'Sports', 'Cooking', 'Reading', 'Movies', 'Photography', 'Dancing', 'Yoga', 'Hiking', 'Gaming', 'Fitness', 'Writing', 'Painting', 'Swimming', 'Camping', 'Shopping', 'Parties', 'Coffee', 'Wine', 'Animals', 'Nature', 'Fashion', 'Technology', 'Science', 'History', 'Language', 'Photography', 'Theater', 'Comedy', 'Concerts', 'Museums', 'Beaches', 'Mountains', 'Road trips', 'Food', 'Wine tasting', 'Board games', 'Puzzles'];
-
         function generateProfiles() {
             const profiles = [];
             const usedNames = new Set();
             
-            // Create image URLs - you can change this to use your own images
+            // Create image URLs
             const imageUrls = [
-
-                    'img/1.webp', 'img/2.webp', 'img/3.webp', 'img/4.webp', 'img/5.webp', 'img/6.webp', 'img/7.webp', 'img/8.webp', 'img/9.webp', 'img/10.webp',
-                    'img/11.webp', 'img/12.webp', 'img/13.webp', 'img/14.webp', 'img/15.webp', 'img/16.webp', 'img/17.webp', 'img/18.webp', 'img/19.webp', 'img/20.webp',
-                    'img/21.webp', 'img/22.webp', 'img/23.webp', 'img/24.webp', 'img/25.webp', 'img/26.webp', 'img/27.webp', 'img/28.webp', 'img/29.webp', 'img/30.webp',
-                    'img/31.webp', 'img/32.webp', 'img/33.webp', 'img/34.webp', 'img/35.webp', 'img/36.webp', 'img/37.webp', 'img/38.webp', 'img/39.webp', 'img/40.webp',
-                    'img/41.webp', 'img/42.webp', 'img/43.webp', 'img/44.webp', 'img/45.webp', 'img/46.webp', 'img/47.webp', 'img/48.webp', 'img/49.webp', 'img/50.webp',
-                    'img/51.webp', 'img/52.webp', 'img/53.webp', 'img/54.webp', 'img/55.webp', 'img/56.webp', 'img/57.webp', 'img/58.webp', 'img/59.webp', 'img/60.webp',
-                    'img/61.webp', 'img/62.webp', 'img/63.webp', 'img/64.webp', 'img/65.webp', 'img/66.webp', 'img/67.webp', 'img/68.webp', 'img/69.webp', 'img/70.webp',
-                    'img/71.webp', 'img/72.webp', 'img/73.webp', 'img/74.webp', 'img/75.webp', 'img/76.webp', 'img/77.webp', 'img/78.webp', 'img/79.webp', 'img/80.webp',
-                    'img/81.webp', 'img/82.webp', 'img/83.webp', 'img/84.webp', 'img/85.webp', 'img/86.webp', 'img/87.webp', 'img/88.webp', 'img/89.webp', 'img/90.webp',
-                    'img/91.jpg', 'img/92.jpg', 'img/93.jpg', 'img/94.jpg', 'img/95.jpg', 'img/96.jpg', 'img/97.jpg', 'img/98.jpg', 'img/99.jpg', 'img/100.jpg'
-
+                'img/1.webp', 'img/2.webp', 'img/3.webp', 'img/4.webp', 'img/5.webp', 'img/6.webp', 'img/7.webp', 'img/8.webp', 'img/9.webp', 'img/10.webp',
+                'img/11.webp', 'img/12.webp', 'img/13.webp', 'img/14.webp', 'img/15.webp', 'img/16.webp', 'img/17.webp', 'img/18.webp', 'img/19.webp', 'img/20.webp',
+                'img/21.webp', 'img/22.webp', 'img/23.webp', 'img/24.webp', 'img/25.webp', 'img/26.webp', 'img/27.webp', 'img/28.webp', 'img/29.webp', 'img/30.webp',
+                'img/31.webp', 'img/32.webp', 'img/33.webp', 'img/34.webp', 'img/35.webp', 'img/36.webp', 'img/37.webp', 'img/38.webp', 'img/39.webp', 'img/40.webp',
+                'img/41.webp', 'img/42.webp', 'img/43.webp', 'img/44.webp', 'img/45.webp', 'img/46.webp', 'img/47.webp', 'img/48.webp', 'img/49.webp', 'img/50.webp',
+                'img/51.webp', 'img/52.webp', 'img/53.webp', 'img/54.webp', 'img/55.webp', 'img/56.webp', 'img/57.webp', 'img/58.webp', 'img/59.webp', 'img/60.webp',
+                'img/61.webp', 'img/62.webp', 'img/63.webp', 'img/64.webp', 'img/65.webp', 'img/66.webp', 'img/67.webp', 'img/68.webp', 'img/69.webp', 'img/70.webp',
+                'img/71.webp', 'img/72.webp', 'img/73.webp', 'img/74.webp', 'img/75.webp', 'img/76.webp', 'img/77.webp', 'img/78.webp', 'img/79.webp', 'img/80.webp',
+                'img/81.webp', 'img/82.webp', 'img/83.webp', 'img/84.webp', 'img/85.webp', 'img/86.webp', 'img/87.webp', 'img/88.webp', 'img/89.webp', 'img/90.webp',
+                'img/91.jpg', 'img/92.jpg', 'img/93.jpg', 'img/94.jpg', 'img/95.jpg', 'img/96.jpg', 'img/97.jpg', 'img/98.jpg', 'img/99.jpg', 'img/100.jpg'
             ];
             
             for (let i = 0; i < 100; i++) {
@@ -316,22 +319,12 @@
                 
                 const age = Math.floor(Math.random() * 11) + 15; // 15-25
                 const bio = `Love exploring new places and trying new things. Always up for an adventure!`;
-                const tags = [];
-                const numTags = Math.floor(Math.random() * 4) + 2; // 2-5 tags
-                
-                while (tags.length < numTags) {
-                    const tag = interests[Math.floor(Math.random() * interests.length)];
-                    if (!tags.includes(tag)) {
-                        tags.push(tag);
-                    }
-                }
                 
                 profiles.push({
                     id: i,
                     name,
                     age,
                     bio,
-                    tags,
                     image: imageUrls[i] // Use specific image URLs
                 });
             }
@@ -362,14 +355,13 @@
             const card = document.createElement('div');
             card.className = 'profile-card';
             card.innerHTML = `
-                <img src="${profile.image}" alt="${profile.name}" class="profile-image">
+                <div class="profile-image-container">
+                    <img src="${profile.image}" alt="${profile.name}" class="profile-image">
+                </div>
                 <div class="profile-info">
                     <h2 class="profile-name">${profile.name}</h2>
                     <p class="profile-age">${profile.age} years old</p>
                     <p class="profile-bio">${profile.bio}</p>
-                    <div class="profile-tags">
-                        ${profile.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
-                    </div>
                 </div>
             `;
             return card;
