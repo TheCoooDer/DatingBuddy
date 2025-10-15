@@ -23,28 +23,26 @@
 
         .app-container {
             width: 100%;
-            max-width: 400px;
-            height: calc(100vh - 70px); /* Reduced height for Telegram mini app */
+            max-width: 500px; /* Increased max-width */
+            height: calc(100vh - 70px);
             display: flex;
             flex-direction: column;
             margin: 0 auto;
             position: relative;
+            padding: 0 10px;
         }
 
         .card-container {
             flex: 1;
             width: 100%;
-            max-width: 350px;
             position: relative;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto;
         }
 
         .profile-card {
             width: 100%;
-            max-width: 350px;
             background: white;
             border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
@@ -68,7 +66,7 @@
 
         .profile-image-container {
             width: 100%;
-            height: 65%; /* Increased image height */
+            height: 70%; /* Increased image height */
             border-radius: 20px 20px 0 0;
             overflow: hidden;
             position: relative;
@@ -82,7 +80,7 @@
         }
 
         .profile-info {
-            padding: 20px;
+            padding: 25px;
             text-align: center;
             flex: 1;
             display: flex;
@@ -91,45 +89,45 @@
         }
 
         .profile-name {
-            font-size: 26px;
+            font-size: 32px; /* Increased font size */
             font-weight: 700;
             color: #333;
             margin-bottom: 5px;
         }
 
         .profile-age {
-            font-size: 18px;
+            font-size: 22px; /* Increased font size */
             color: #666;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
         .profile-bio {
-            font-size: 16px;
+            font-size: 18px; /* Increased font size */
             color: #555;
             line-height: 1.5;
         }
 
         .action-buttons {
             position: absolute;
-            bottom: 20px;
+            bottom: 25px;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
-            gap: 20px;
+            gap: 25px; /* Increased gap */
             z-index: 101;
-            padding: 0 10px;
+            padding: 0 15px;
         }
 
         .action-btn {
-            width: 50px;
-            height: 50px;
+            width: 65px; /* Increased button size */
+            height: 65px; /* Increased button size */
             border-radius: 50%;
             border: none;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 22px;
+            font-size: 28px; /* Increased icon size */
             transition: transform 0.2s ease, box-shadow 0.2s ease;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
@@ -161,19 +159,19 @@
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            font-size: 60px;
+            font-size: 70px; /* Increased indicator size */
             opacity: 0;
             transition: opacity 0.3s ease;
             pointer-events: none;
         }
 
         .swipe-indicator.left {
-            left: 30px;
+            left: 40px; /* Increased spacing */
             color: #ff6b6b;
         }
 
         .swipe-indicator.right {
-            right: 30px;
+            right: 40px; /* Increased spacing */
             color: #4ecdc4;
         }
 
@@ -186,7 +184,6 @@
             padding: 40px;
             color: white;
             width: 100%;
-            max-width: 350px;
             flex: 1;
             display: flex;
             flex-direction: column;
@@ -194,24 +191,24 @@
         }
 
         .empty-state h2 {
-            font-size: 28px;
-            margin-bottom: 15px;
+            font-size: 36px; /* Increased font size */
+            margin-bottom: 20px;
         }
 
         .empty-state p {
-            font-size: 16px;
+            font-size: 20px; /* Increased font size */
             opacity: 0.9;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
 
         .restart-btn {
             margin-top: 20px;
-            padding: 12px 24px;
+            padding: 15px 30px;
             background: white;
             color: #667eea;
             border: none;
             border-radius: 30px;
-            font-size: 16px;
+            font-size: 18px; /* Increased font size */
             font-weight: 600;
             cursor: pointer;
             transition: transform 0.2s ease;
@@ -228,37 +225,54 @@
             right: 15px;
             background: rgba(255, 255, 255, 0.2);
             color: white;
-            padding: 6px 12px;
+            padding: 8px 16px;
             border-radius: 20px;
-            font-size: 14px;
+            font-size: 16px; /* Increased font size */
             backdrop-filter: blur(10px);
         }
 
         @media (max-width: 480px) {
-            .profile-card {
-                max-width: 320px;
-            }
-            
-            .profile-image-container {
-                height: 60%;
-            }
-            
-            .profile-name {
-                font-size: 22px;
-            }
-            
-            .action-btn {
-                width: 45px;
-                height: 45px;
-                font-size: 18px;
-            }
-            
             .app-container {
+                max-width: 100%;
                 padding: 5px;
             }
             
-            .profile-info {
-                padding: 15px;
+            .profile-card {
+                max-width: 100%;
+            }
+            
+            .profile-image-container {
+                height: 65%;
+            }
+            
+            .profile-name {
+                font-size: 28px;
+            }
+            
+            .profile-age {
+                font-size: 20px;
+            }
+            
+            .profile-bio {
+                font-size: 16px;
+            }
+            
+            .action-btn {
+                width: 55px;
+                height: 55px;
+                font-size: 24px;
+            }
+            
+            .swipe-indicator {
+                font-size: 60px;
+            }
+            
+            .swipe-indicator.left {
+                left: 30px;
+            }
+            
+            .swipe-indicator.right {
+                right: 30px;
             }
         }
     </style>
